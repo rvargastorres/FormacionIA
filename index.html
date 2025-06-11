@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IA y Tu Futuro: Evaluación Personalizada</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #2563eb 0%, #059669 100%);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .progress-bar {
+            transition: width 0.5s ease-in-out;
+        }
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .typing-indicator:after {
+            content: '...';
+            animation: typing 1.5s infinite;
+        }
+        @keyframes typing {
+            0% { content: '.'; }
+            33% { content: '..'; }
+            66% { content: '...'; }
+        }
+        @keyframes marqueeLoop {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+        .animate-marqueeLoop {
+            animation: marqueeLoop 40s linear infinite;
+            display: flex;
+            width: 200%;
+        }
+        .animate-marqueeLoop img {
+            margin: 0 3rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- Header -->
+    <header class="gradient-bg text-white shadow-lg">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRB38k3L8mMi01-271cYp8mP4uCJa6cmrWNHA&s" alt="Logo" class="h-10 w-10 rounded-full">
+                    <h1 class="text-2xl font-bold">IA y Tu Futuro</h1>
+                </div>
+                <button id="menuBtn" class="md:hidden text-white focus:outline-none">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+                <nav class="hidden md:flex space-x-6">
+                    <a href="#" class="font-medium hover:text-gray-200">Inicio</a>
+                    <a href="#" class="font-medium hover:text-gray-200">Sobre Nosotros</a>
+                    <a href="#" class="font-medium hover:text-gray-200">Cursos</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative overflow-hidden text-white py-16">
+        <!-- Fondo de imagen -->
+        <div class="absolute inset-0 z-0">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWIPrMGKfJzaJ4H9iSHpOBuhTuWKfZCHYWrw&s" alt="Equipo feliz trabajando con robots en oficina futurista" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-black opacity-50"></div>
+        </div>
+        <div class="container mx-auto px-4 flex flex-col-reverse md:flex-row items-center relative z-10">
+            <div class="md:w-1/2 mt-8 md:mt-0">
+                <h2 class="text-4xl font-bold mb-4 animate__animated animate__fadeInUp">Descubre cómo la IA puede transformar tu vida</h2>
+                <p class="text-xl mb-8 animate__animated animate__fadeInUp animate__delay-1s">Completa nuestra evaluación personalizada y conoce qué formación en inteligencia artificial se adapta mejor a tus objetivos y situación actual.</p>
+                <button id="startQuizBtn" class="bg-amber-400 hover:bg-amber-500 text-gray-900 font-bold py-3 px-8 rounded-full shadow-lg transition-all animate__animated animate__fadeInUp animate__delay-2s">Comenzar Evaluación Gratuita</button>
+            </div>
+            <div class="md:w-1/2 flex justify-center animate__animated animate__fadeIn">
+                <div class="hidden"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden fixed inset-0 bg-gray-900 bg-opacity-90 z-50">
+        <div class="flex flex-col items-center justify-center h-full text-white space-y-6">
+            <a href="#" class="text-2xl font-medium">Inicio</a>
+            <a href="#" class="text-2xl font-medium">Sobre Nosotros</a>
+            <a href="#" class="text-2xl font-medium">Cursos</a>
+            <button id="closeMenuBtn" class="mt-8 text-amber-400 text-lg focus:outline-none">
+                <i class="fas fa-times"></i> Cerrar
+            </button>
+        </div>
+    </div>
+
+    <!-- Quiz Container -->
+    <div id="quizContainer" class="hidden fixed inset-0 bg-gray-900 bg-opacity-90 z-50 overflow-y-auto">
+        <div class="min-h-screen flex items-center justify-center px-4 py-12">
+            <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl p-6 relative">
+                <!-- Close Button -->
+                <button id="closeQuizBtn" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 focus:outline-none">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+                
+                <!-- Progress Bar -->
+                <div class="mb-6">
+                    <div class="flex justify-between mb-2">
+                        <span id="progressText" class="text-sm font-medium text-gray-600">Pregunta 1 de 25</span>
+                        <span id="progressPercent" class="text-sm font-medium text-gray-600">4% completado</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div id="progressBar" class="bg-blue-600 h-2.5 rounded-full progress-bar" style="width: 4%"></div>
+                    </div>
+                </div>
+                
+                <!-- Quiz Content -->
+                <div id="quizContent">
+                    <!-- Question will be inserted here by JavaScript -->
+                </div>
+                
+                <!-- Navigation Buttons -->
+                <div class="flex justify-between mt-8">
+                    <button id="prevBtn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-6 rounded-lg hidden">Anterior</button>
+                    <button id="nextBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg ml-auto">Siguiente</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Section -->
+    <div id="resultsContainer" class="hidden fixed inset-0 bg-gray-900 bg-opacity-90 z-50 overflow-y-auto animate__animated animate__fadeIn">
+        <div class="min-h-screen flex items-center justify-center px-4 py-12">
+            <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl p-8 relative animate__animated animate__zoomIn">
+                <!-- Close Button -->
+                <button id="closeResultsBtn" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 focus:outline-none">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+                
+                <!-- Results Content -->
+                <div id="resultsContent" class="text-center">
+                    <div class="mb-6 flex justify-center">
+                        <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-check-circle text-green-500 text-5xl"></i>
+                        </div>
+                    </div>
+                    
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">¡Excelentes resultados!</h2>
+                    
+                    <div id="analysisAnimation" class="mb-6 flex flex-col items-center">
+                        <div class="relative w-64 h-1 bg-gray-200 rounded-full mb-2">
+                            <div id="analysisBar" class="absolute top-0 left-0 h-1 bg-blue-500 rounded-full" style="width: 0%"></div>
+                        </div>
+                        <p id="analysisText" class="text-gray-600 typing-indicator">Analizando tus respuestas</p>
+                    </div>
+                    
+                    <div id="resultsDetails" class="hidden text-left">
+                        <p class="text-lg text-gray-700 mb-6">Nuestro análisis ha determinado que tienes un gran potencial para aprovechar la inteligencia artificial y transformar tu situación económica. Basándonos en tus respuestas:</p>
+                        
+                        <div class="mb-8 space-y-4">
+                            <div class="flex items-start">
+                                <div class="bg-blue-100 p-2 rounded-full mr-4">
+                                    <i class="fas fa-lightbulb text-blue-600"></i>
+                                </div>
+                                <p class="text-gray-700 flex-1">Tienes las habilidades y la mentalidad necesarias para tener éxito en el mundo actual dominado por la tecnología.</p>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="bg-green-100 p-2 rounded-full mr-4">
+                                    <i class="fas fa-chart-line text-green-600"></i>
+                                </div>
+                                <p class="text-gray-700 flex-1">Estás en el momento perfecto para invertir en tu educación tecnológica y dar un salto en tus ingresos.</p>
+                            </div>
+                            <div class="flex items-start">
+                                <div class="bg-yellow-100 p-2 rounded-full mr-4">
+                                    <i class="fas fa-exclamation-triangle text-yellow-600"></i>
+                                </div>
+                                <p class="text-gray-700 flex-1">Sin formación en IA, podrías estar en desventaja en los próximos años frente a quienes dominen estas tecnologías.</p>
+                            </div>
+                        </div>
+                        
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Recomendación profesional:</h3>
+                        <p class="text-gray-700 mb-6">La única pieza que te falta es la formación adecuada en inteligencia artificial aplicada a tu campo. Nuestros programas están diseñados específicamente para personas como tú, que reconocen la importancia de actualizarse pero necesitan una guía clara para comenzar.</p>
+                        
+                        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-8">
+                            <p class="text-blue-700 font-medium">Enhorabuena, <span id="userName" class="font-bold">[Nombre]</span>! Has dado el primer paso para tomar el control de tu futuro económico con IA.</p>
+                        </div>
+                        
+                        <div class="text-center">
+                            <button id="showCoursesBtn" class="bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 text-white font-bold py-4 px-8 rounded-full shadow-lg transition-all mb-4 w-full max-w-md mx-auto">
+                                Ver Cursos Recomendados
+                            </button>
+                            <p class="text-sm text-gray-500">Oferta especial disponible solo para evaluaciones completadas hoy.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Courses Section -->
+    <div id="coursesContainer" class="hidden fixed inset-0 bg-gray-900 bg-opacity-90 z-50 overflow-y-auto">
+        <div class="min-h-screen flex items-center justify-center px-4 py-12">
+            <div class="bg-white rounded-xl shadow-2xl w-full max-w-3xl p-8 relative animate__animated animate__zoomIn">
+                <!-- Close Button -->
+                <button id="closeCoursesBtn" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 focus:outline-none">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+                
+                <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">Cursos Recomendados</h2>
+                <p class="text-center text-gray-600 mb-8">Selecciona el programa que mejor se adapte a tus necesidades</p>
+                
+                <div class="grid md:grid-cols-2 gap-6 mb-8">
+                    <!-- Course 1 -->
+                    <div class="border border-gray-200 rounded-xl p-6 hover:border-blue-300 card-hover">
+                        <div class="bg-blue-100 inline-flex p-3 rounded-full mb-4">
+                            <i class="fas fa-laptop-code text-blue-600 text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Fundamentos de IA para Principiantes</h3>
+                        <p class="text-gray-600 mb-4">Aprende los conceptos básicos de inteligencia artificial y cómo aplicarlos en cualquier profesión.</p>
+                        <ul class="space-y-2 mb-6">
+                            <li class="flex items-center">
+                                <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                <span class="text-gray-700">Duración: 4 semanas</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                <span class="text-gray-700">Incluye certificación</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                <span class="text-gray-700">Acceso a comunidad privada</span>
+                            </li>
+                        </ul>
+                        <p class="text-2xl font-bold text-blue-600 mb-4">$297 <span class="text-sm font-normal text-gray-500">o 3 cuotas de $99</span></p>
+                        <button class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-all">Inscribirme</button>
+                    </div>
+                    
+                    <!-- Course 2 -->
+                    <div class="border border-gray-200 rounded-xl p-6 hover:border-green-300 card-hover">
+                        <div class="bg-green-100 inline-flex p-3 rounded-full mb-4">
+                            <i class="fas fa-briefcase text-green-600 text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">IA Avanzada para Negocios</h3>
+                        <p class="text-gray-600 mb-4">Domina herramientas de IA para aumentar la productividad y ganancias de tu negocio.</p>
+                        <ul class="space-y-2 mb-6">
+                            <li class="flex items-center">
+                                <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                <span class="text-gray-700">Duración: 8 semanas</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                <span class="text-gray-700">Casos prácticos reales</span>
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                <span class="text-gray-700">Sesiones individuales</span>
+                            </li>
+                        </ul>
+                        <p class="text-2xl font-bold text-green-600 mb-4">$597 <span class="text-sm font-normal text-gray-500">o 4 cuotas de $149.25</span></p>
+                        <button class="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg transition-all">Inscribirme</button>
+                    </div>
+                </div>
+                
+                <div class="text-center">
+                    <a href="#" class="text-blue-600 hover:text-blue-800 font-medium">Ver todos los cursos disponibles</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">¿Por qué formarte en IA?</h2>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="bg-gray-50 p-8 rounded-xl shadow-sm card-hover">
+                    <div class="bg-purple-100 inline-flex p-4 rounded-full mb-6">
+                        <i class="fas fa-wallet text-purple-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Mayores ingresos</h3>
+                    <p class="text-gray-600">Los profesionales con conocimientos de IA pueden ganar hasta un 40% más que sus colegas sin estas habilidades.</p>
+                </div>
+                
+                <!-- Feature 2 -->
+                <div class="bg-gray-50 p-8 rounded-xl shadow-sm card-hover">
+                    <div class="bg-amber-100 inline-flex p-4 rounded-full mb-6">
+                        <i class="fas fa-shield-alt text-amber-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Seguridad laboral</h3>
+                    <p class="text-gray-600">Las habilidades en IA te hacen resistente a los cambios tecnológicos y más valioso para tu empleador.</p>
+                </div>
+                
+                <!-- Feature 3 -->
+                <div class="bg-gray-50 p-8 rounded-xl shadow-sm card-hover">
+                    <div class="bg-teal-100 inline-flex p-4 rounded-full mb-6">
+                        <i class="fas fa-rocket text-teal-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Oportunidades</h3>
+                    <p class="text-gray-600">Accede a nuevas oportunidades profesionales en sectores en crecimiento que requieren expertise en inteligencia artificial.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trusted Companies -->
+    <section class="py-8 bg-gradient-to-r from-gray-50 to-white">
+        <div class="container mx-auto px-4 overflow-hidden">
+            <h3 class="text-lg font-medium text-center text-gray-600 mb-6">Empresas en las que confiamos para tu formación</h3>
+            <div class="relative h-24 w-full overflow-hidden">
+                <div class="absolute flex items-center animate-marqueeLoop whitespace-nowrap">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAecAAABnCAMAAAANFHoKAAAAk1BMVEX///9zc3P/uQDyUCJ/ugAApO9ra2tubm5oaGiHh4fMzMyzs7OamppnZ2fX19fs7Ozi4uLk79L4+/H/79L/+/H2jHPySxjyRw/3pJGCvAD/+vllwfSIzfb/uwDzYjuMwSH/wCEhrvGlpaW9vb329va7u7uLi4vn5+fJycmTk5Opqamfn59fX1/3l3/zXjT4rJraaoESAAAMrUlEQVR4nO2di9bjphGArTYFXaxLtpum2TZNK2FdvU3f/+mqKzPAIKFN+8eyNHtyNmuhseATMDMM+PbDX/64S878662X77/bKT99ul3ye8rF+RxycT6HXJzPIRfnc8jF+RxycT6HXJzPIRfnc8jF+RxycT6HXJzPIRfno0sStaXneWVZRank1MX50FLfY8a5NwqPH/aCF+cDi8jjmfEorLAXfVPO2aPrivpjv/PDJSuZ5x2LcxIqkrhUUzTKPRm60sacc8aewkXPUSXxuHc0zm3MsMQuXbFQ7okjeUGUcwOwyqW9Diq1p8sBON/VV5NH68VHCWy3tFIZc9FzTBGB1puPyNkrt0fcxLdwrpEu37HVjieRMjf30xQ/ImcWblbUOgSEqAX8bE3FgSVFleRx8Ozylml+ldJVXpQzv29VVMTaHZJzg5qAOVl0B5QOGoy1szUTos6RFtVXXP5FOXtsJbYzSqS/GZJzgjg7GXRHFFTx3LiYRWXMeIw/elnOK7GdUfQbgLMo0ceu7XYwycA4KdUrInx6/tg4h+CsP74uIdPKI3u7kY3gb0/zx5RCVp812hUZIjsGZ391Zq3s/fl2yyfQfHNQOKzksvpcm5nAOjkG5382ZkYq3dl1uZuIY3s1K8f9cQpjZcx4jD96Wc4rsZ1R9BuAsyjRx67tdjDJwDgp1SsyfHr+2DiH4Kw/vi4h08oje7uRjeBvT/PHlEJWH3e0KzJEdgzO/vrMWtn78+2WT6D55qBwWMll9bk2M4F1cgzOq6dZrXdn1eVunvKtb5R+bZwPLLWnC7t+yq7Lb5SL823SlV2X3yh/eJvK/+7q1l0Q9G/GdQk/5OJ8Drk4n0MuzueQi/M55OJ8Drk4n0MuzueQi/M5BN1E0F+uD7K/PKt9v3XXFkTi5gvx3XzbnZ/ffsTlq7s+z37+2l2fZz//w12fZz+v3PW5Rf7p1l2fZz//012fZz//9lZ9bpH/u3XXVgSyv2yE72bR7vx8zEfn/J9b9XlGBDvC1l2fZ8/h/NQK+T7OXS38dnfX59nzv6LQv12fZ7/xg9yuzy0CnX5d3fV5VrpZn1uE7dLndoHsL6+d9n1eOHCbPj+5/fb2a6fPn96+u1WfW+S3CvE+g6y7Ps+ew9nF9uL8ZfYczs+B9hxoLvYczi72HGgu9hxoLvYcaC72HGgu9hxoLvYcaC72HGgu9hxoLvYcaC72HGgu9hxoLvYcaC72HPkOQq4Q8H8VQkIgwFUIyXkIBX0VQnIeQkFfhZCch1DQVyEk5yEU9FUIyXkIBX0VQnIeQkFfhZCch1DQVyEk5yEU9FUIyXkIBX0VQnIeQkFfhZCch1DQVyEk5yHU/wB7dO1w3U2qRgAAAABJRU5ErkJggg==" alt="Microsoft" class="h-10 mx-8 opacity-80 hover:opacity-100 transition-opacity">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google" class="h-9 mx-8 opacity-80 hover:opacity-100 transition-opacity">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg" alt="OpenAI" class="h-9 mx-8 opacity-80 hover:opacity-100 transition-opacity">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/1/1a/IBM_logo.svg" alt="IBM" class="h-8 mx-8 opacity-80 hover:opacity-100 transition-opacity">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/21/Nvidia_logo.svg" alt="Nvidia" class="h-8 mx-8 opacity-80 hover:opacity-100 transition-opacity">
+                    <img src="data:image/png;base64,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" alt="DeepMind" class="h-8 mx-8 opacity-80 hover:opacity-100 transition-opacity">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/9/96/Meta-Logo.png" alt="Meta AI" class="h-8 mx-8 opacity-80 hover:opacity-100 transition-opacity">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/7/7d/Intel_logo_%282006-2020%29.svg" alt="Intel AI" class="h-9 mx-8 opacity-80 hover:opacity-100 transition-opacity">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Anthropic_logo.svg" alt="Anthropic" class="h-8 mx-8 opacity-80 hover:opacity-100 transition-opacity">
+                    
+                    <!-- Logos duplicados para efecto cíclico perfecto -->
+                    <img src="/logos/microsoft.svg" alt="Microsoft" class="h-10 mx-8 opacity-80 hover:opacity-100 transition-opacity">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google" class="h-9 mx-8 opacity-80 hover:opacity-100 transition-opacity">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/OpenAI_logo.svg" alt="OpenAI" class="h-9 mx-8 opacity-80 hover:opacity-100 transition-opacity">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/1/1a/IBM_logo.svg" alt="IBM" class="h-8 mx-8 opacity-80 hover:opacity-100 transition-opacity">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Nvidia_logo.svg" alt="Nvidia" class="h-8 mx-8 opacity-80 hover:opacity-100 transition-opacity">
+                    <img src="data:image/png;base64,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" alt="DeepMind" class="h-8 mx-8 opacity-80 hover:opacity-100 transition-opacity">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/9/96/Meta-Logo.png" alt="Meta AI" class="h-8 mx-8 opacity-80 hover:opacity-100 transition-opacity">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/7/7d/Intel_logo_%282006-2020%29.svg" alt="Intel AI" class="h-9 mx-8 opacity-80 hover:opacity-100 transition-opacity">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/9/94/Anthropic_Logo.png" alt="Anthropic" class="h-7 mx-8 opacity-80 hover:opacity-100 transition-opacity">
+=======
+                    <!-- Logos duplicados para efecto cíclico perfecto -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Historias de éxito</h2>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Testimonial 1 -->
+                <div class="bg-white p-8 rounded-xl shadow-sm">
+                    <div class="flex items-center mb-4">
+                        <img src="https://randomuser.me/api/portraits/women/42.jpg" alt="User" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h4 class="font-bold text-gray-800">María González</h4>
+                            <p class="text-gray-500">Contadora</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 mb-4">"Gracias al curso de IA para finanzas, automatizé procesos en mi trabajo y ahora puedo enfocarme en análisis estratégicos. ¡Mi salario aumentó un 35% en 6 meses!"</p>
+                    <div class="flex text-yellow-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+                
+                <!-- Testimonial 2 -->
+                <div class="bg-white p-8 rounded-xl shadow-sm">
+                    <div class="flex items-center mb-4">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h4 class="font-bold text-gray-800">Carlos Martínez</h4>
+                            <p class="text-gray-500">Emprendedor</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 mb-4">"Implementé herramientas de IA en mi negocio según lo aprendido en el curso. Ahora atiendo el doble de clientes con menos horas de trabajo y mayores ganancias."</p>
+                    <div class="flex text-yellow-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-16 gradient-bg text-white">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold mb-6">¿Listo para transformar tu futuro con IA?</h2>
+            <p class="text-xl mb-8 max-w-2xl mx-auto">Completa nuestra evaluación gratuita y descubre qué curso de inteligencia artificial es perfecto para ti.</p>
+            <button id="bottomCtaBtn" class="bg-amber-400 hover:bg-amber-500 text-gray-900 font-bold py-3 px-8 rounded-full shadow-lg transition-all">Comenzar ahora</button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRB38k3L8mMi01-271cYp8mP4uCJa6cmrWNHA&s" alt="Logo" class="h-8 w-8 rounded-full">
+                        <h3 class="text-xl font-bold">IA y Tu Futuro</h3>
+                    </div>
+                    <p class="text-gray-300">Programas de formación en inteligencia artificial para el desarrollo profesional.</p>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Cursos</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-white">Para Principiantes</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">Para Negocios</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">Especializados</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Empresa</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-300 hover:text-white">Sobre Nosotros</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">Método</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white">Equipo</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Contacto</h4>
+                    <ul class="space-y-2">
+                        <li class="flex items-center">
+                            <i class="fas fa-envelope mr-2 text-gray-300"></i>
+                            <span class="text-gray-300">info@iaytufuturo.com</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-phone-alt mr-2 text-gray-300"></i>
+                            <span class="text-gray-300">+34 651 94 3523</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fab fa-whatsapp mr-2 text-gray-300"></i>
+                            <span class="text-gray-300">WhatsApp Chat</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 mb-4 md:mb-0">© 2023 IA y Tu Futuro. Todos los derechos reservados.</p>
+                <div class="flex space-x-4">
+                    <a href="https://www.facebook.com/terapiaexpansivadeconciencia" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/YOUR_PHONE_NUMBER" target="_blank" class="fixed bottom-6 right-6 bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center text-2xl shadow-lg hover:bg-green-600 transition-all z-40">
+        <i class="fab fa-whatsapp relative">
+            <span class="absolute inset-0 rounded-full border-4 border-amber-300 animate-ping opacity-40"></span>
+        </i>
+    </a>
+
+    <script>
+        // Mobile Menu Toggle
+        const menuBtn = document.getElementById('menuBtn');
+        const closeMenuBtn = document.getElementById('closeMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.remove('hidden');
+        });
+
+        closeMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.add('hidden');
+        });
+
+        // Quiz Questions (25-30 questions as requested)
+        const questions = [
+            {
+                id: 1,
+                type: 'name',
+                question: "¿Cuál es tu nombre?",
+                placeholder: "Ingresa tu nombre completo"
+            },
+            {
+                id: 2,
+                type: 'single',
+                question: "¿Cuál es tu situación laboral actual?",
+                options: [
+                    { text: "Empleado/a en una empresa", value: "employed" },
+                    { text: "Autónomo/a o freelance", value: "self-employed" },
+                    { text: "Desempleado/a buscando trabajo", value: "unemployed" },
+                    { text: "Estudiante", value: "student" },
+                    { text: "Jubilado/a", value: "retired" }
+                ]
+            },
+            {
+                id: 3,
+                type: 'range',
+                question: "En una escala del 1 al 5, ¿cuán satisfecho/a estás con tus ingresos actuales?",
+                min: 1,
+                max: 5,
+                labels: ["Muy insatisfecho", "Neutral", "Muy satisfecho"]
+            },
+            {
+                id: 4,
+                type: 'single',
+                question: "¿Qué porcentaje de tus ingresos proviene de fuentes digitales o tecnológicas?",
+                options: [
+                    { text: "Menos del 25%", value: "low" },
+                    { text: "Entre 25% y 50%", value: "medium" },
+                    { text: "Más del 50%", value: "high" },
+                    { text: "No estoy seguro/a", value: "unknown" }
+                ]
+            },
+            {
+                id: 5,
+                type: 'single',
+                question: "¿Qué tan vulnerable crees que es tu trabajo actual ante la automatización por IA?",
+                options: [
+                    { text: "Muy vulnerable - Podría ser completamente automatizado", value: "high" },
+                    { text: "Moderadamente vulnerable - Algunas tareas podrían automatizarse", value: "medium" },
+                    { text: "Poco vulnerable - Requiere habilidades humanas difíciles de automatizar", value: "low" },
+                    { text: "No estoy seguro/a", value: "unknown" }
+                ]
+            },
+            {
+                id: 6,
+                type: 'range',
+                question: "¿Con qué frecuencia utilizas herramientas tecnológicas avanzadas en tu trabajo diario?",
+                min: 1,
+                max: 5,
+                labels: ["Nunca", "Ocasionalmente", "Constantemente"]
+            },
+            {
+                id: 7,
+                type: 'multi',
+                question: "¿Cuáles de estas herramientas de IA has utilizado? (Selecciona todas las que apliquen)",
+                options: [
+                    { text: "Chatbots (ej. ChatGPT)", value: "chatbots" },
+                    { text: "Herramientas de generación de imágenes (ej. DALL-E)", value: "image-gen" },
+                    { text: "Asistentes de productividad (ej. Notion AI)", value: "productivity" },
+                    { text: "Herramientas de análisis de datos", value: "data-analysis" },
+                    { text: "Ninguna de las anteriores", value: "none" }
+                ],
+                maxSelect: 4
+            },
+            {
+                id: 8,
+                type: 'range',
+                question: "¿Qué nivel de comodidad tienes aprendiendo nuevas tecnologías?",
+                min: 1,
+                max: 5,
+                labels: ["Muy incómodo/a", "Neutral", "Muy cómodo/a"]
+            },
+            {
+                id: 9,
+                type: 'single',
+                question: "Si pudieras aumentar tus ingresos significativamente aprendiendo una nueva habilidad, ¿cuánto tiempo estarías dispuesto/a a invertir semanalmente?",
+                options: [
+                    { text: "Menos de 3 horas por semana", value: "low" },
+                    { text: "Entre 3 y 6 horas por semana", value: "medium" },
+                    { text: "Más de 6 horas por semana", value: "high" },
+                    { text: "No estoy seguro/a", value: "unknown" }
+                ]
+            },
+            {
+                id: 10,
+                type: 'range',
+                question: "¿Qué tan urgente consideras que es actualizar tus habilidades profesionales en el contexto actual?",
+                min: 1,
+                max: 5,
+                labels: ["No es urgente", "Algo urgente", "Extremadamente urgente"]
+            },
+            {
+                id: 11,
+                type: 'single',
+                question: "¿Qué tipo de obstáculos te impiden actualmente aprender nuevas habilidades como la IA?",
+                options: [
+                    { text: "Falta de tiempo", value: "time" },
+                    { text: "Falta de recursos económicos", value: "money" },
+                    { text: "No sé por dónde empezar", value: "guidance" },
+                    { text: "Falta de confianza en mis habilidades", value: "confidence" },
+                    { text: "No veo la necesidad", value: "need" }
+                ]
+            },
+            {
+                id: 12,
+                type: 'multi',
+                question: "¿En qué áreas te gustaría que la IA te ayudara? (Selecciona hasta 3)",
+                options: [
+                    { text: "Aumentar productividad", value: "productivity" },
+                    { text: "Generar ingresos adicionales", value: "income" },
+                    { text: "Automatizar tareas repetitivas", value: "automation" },
+                    { text: "Mejorar toma de decisiones", value: "decisions" },
+                    { text: "Desarrollo profesional", value: "career" },
+                    { text: "Emprender un negocio", value: "business" }
+                ],
+                maxSelect: 3
+            },
+            {
+                id: 13,
+                type: 'range',
+                question: "¿Qué tanto crees que la IA dominará el mercado laboral en los próximos 5 años?",
+                min: 1,
+                max: 5,
+                labels: ["No tendrá mucho impacto", "Transformará completamente el mercado"]
+            },
+            {
+                id: 14,
+                type: 'single',
+                question: "¿Qué tan preparado/a te sientes para los cambios que la IA traerá a tu industria?",
+                options: [
+                    { text: "Muy preparado/a - ya estoy adoptando estas tecnologías", value: "very" },
+                    { text: "Algo preparado/a - tengo algunas nociones", value: "somewhat" },
+                    { text: "Poco preparado/a - necesito capacitación urgente", value: "little" },
+                    { text: "Nada preparado/a - no sé por dónde empezar", value: "not" }
+                ]
+            },
+            {
+                id: 15,
+                type: 'range',
+                question: "¿Qué nivel de estrés te genera la idea de quedarte atrás tecnológicamente?",
+                min: 1,
+                max: 5,
+                labels: ["Nada de estrés", "Mucho estrés"]
+            },
+            {
+                id: 16,
+                type: 'single',
+                question: "Si invirtieras en formación en IA, ¿cuál sería tu principal motivación?",
+                options: [
+                    { text: "Aumentar mis ingresos", value: "income" },
+                    { text: "Mantener mi empleo actual", value: "job-security" },
+                    { text: "Cambiar a un trabajo mejor", value: "new-job" },
+                    { text: "Iniciar mi propio negocio", value: "business" },
+                    { text: "Satisfacción personal", value: "personal" }
+                ]
+            },
+            {
+                id: 17,
+                type: 'single',
+                question: "¿Qué tipo de formación prefieres?",
+                options: [
+                    { text: "Clases en vivo online", value: "live" },
+                    { text: "Cursos grabados a mi ritmo", value: "recorded" },
+                    { text: "Programas intensivos bootcamp", value: "bootcamp" },
+                    { text: "Mentorías 1-a-1", value: "mentoring" }
+                ]
+            },
+            {
+                id: 18,
+                type: 'range',
+                question: "¿Qué tan probable es que inviertas en tu formación profesional este año?",
+                min: 1,
+                max: 5,
+                labels: ["Poco probable", "Muy probable"]
+            },
+            {
+                id: 19,
+                type: 'multi',
+                question: "¿Qué beneficios específicos esperarías de un programa de formación en IA? (Selecciona hasta 3)",
+                options: [
+                    { text: "Certificación reconocida", value: "certification" },
+                    { text: "Acceso a herramientas premium", value: "tools" },
+                    { text: "Comunidad de networking", value: "community" },
+                    { text: "Apoyo para implementación", value: "support" },
+                    { text: "Resultados rápidos y prácticos", value: "results" }
+                ],
+                maxSelect: 3
+            },
+            {
+                id: 20,
+                type: 'single',
+                question: "¿Qué nivel de formación inicial tienes en tecnología?",
+                options: [
+                    { text: "Principiante - conocimientos básicos", value: "beginner" },
+                    { text: "Intermedio - algo de experiencia", value: "intermediate" },
+                    { text: "Avanzado - cómodo con la tecnología", value: "advanced" },
+                    { text: "Experto - profesional en tecnología", value: "expert" }
+                ]
+            },
+            {
+                id: 21,
+                type: 'range',
+                question: "En una escala del 1 al 5, ¿qué tan importante crees que será la IA en tu campo profesional en 5 años?",
+                min: 1,
+                max: 5,
+                labels: ["Sin importancia", "Extremadamente importante"]
+            },
+            {
+                id: 22,
+                type: 'text',
+                question: "Describe brevemente qué es lo que más te preocupa sobre tu futuro profesional:",
+                placeholder: "Ej.: quedarme sin trabajo por no actualizarme..."
+            },
+            {
+                id: 23,
+                type: 'single',
+                question: "Si supieras que aprender IA podría duplicar tus ingresos en 1 año, ¿qué estarías dispuesto/a a hacer?",
+                options: [
+                    { text: "Invertir dinero en formación", value: "money" },
+                    { text: "Dedicar tiempo significativo cada semana", value: "time" },
+                    { text: "Ambas cosas: tiempo y dinero", value: "both" },
+                    { text: "No estoy seguro/a", value: "unknown" }
+                ]
+            },
+            {
+                id: 24,
+                type: 'range',
+                question: "¿Qué confianza tienes en que podrías aprender y aplicar IA en tu trabajo si tuvieras la guía adecuada?",
+                min: 1,
+                max: 5,
+                labels: ["Nada de confianza", "Total confianza"]
+            },
+            {
+                id: 25,
+                type: 'single',
+                question: "¿Qué tan probable es que recomendarías este cuestionario a alguien en tu situación?",
+                options: [
+                    { text: "Poco probable", value: "unlikely" },
+                    { text: "Probable", value: "likely" },
+                    { text: "Muy probable", value: "very-likely" }
+                ]
+            }
+        ];
+
+        // Quiz Logic
+        const startQuizBtn = document.getElementById('startQuizBtn');
+        const bottomCtaBtn = document.getElementById('bottomCtaBtn');
+        const quizContainer = document.getElementById('quizContainer');
+        const closeQuizBtn = document.getElementById('closeQuizBtn');
+        const quizContent = document.getElementById('quizContent');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const progressText = document.getElementById('progressText');
+        const progressPercent = document.getElementById('progressPercent');
+        const progressBar = document.getElementById('progressBar');
+        
+        const resultsContainer = document.getElementById('resultsContainer');
+        const closeResultsBtn = document.getElementById('closeResultsBtn');
+        const analysisAnimation = document.getElementById('analysisAnimation');
+        const resultsDetails = document.getElementById('resultsDetails');
+        const analysisBar = document.getElementById('analysisBar');
+        const analysisText = document.getElementById('analysisText');
+        const userName = document.getElementById('userName');
+        
+        const coursesContainer = document.getElementById('coursesContainer');
+        const closeCoursesBtn = document.getElementById('closeCoursesBtn');
+        const showCoursesBtn = document.getElementById('showCoursesBtn');
+        
+        let currentQuestion = 0;
+        let answers = {};
+        let userNameValue = '';
+        
+        // Start Quiz
+        startQuizBtn.addEventListener('click', () => {
+            quizContainer.classList.remove('hidden');
+            showQuestion(currentQuestion);
+        });
+        
+        bottomCtaBtn.addEventListener('click', () => {
+            quizContainer.classList.remove('hidden');
+            showQuestion(currentQuestion);
+        });
+        
+        // Close Quiz
+        closeQuizBtn.addEventListener('click', () => {
+            quizContainer.classList.add('hidden');
+            resetQuiz();
+        });
+        
+        // Close Results
+        closeResultsBtn.addEventListener('click', () => {
+            resultsContainer.classList.add('hidden');
+            resetQuiz();
+        });
+        
+        // Close Courses
+        closeCoursesBtn.addEventListener('click', () => {
+            coursesContainer.classList.add('hidden');
+        });
+        
+        // Show Courses
+        showCoursesBtn.addEventListener('click', () => {
+            resultsContainer.classList.add('hidden');
+            coursesContainer.classList.remove('hidden');
+        });
+        
+        // Navigation
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion(currentQuestion);
+            }
+        });
+        
+        nextBtn.addEventListener('click', () => {
+            // Validate current question has an answer
+            if (validateCurrentQuestion()) {
+                saveAnswer();
+                
+                if (currentQuestion < questions.length - 1) {
+                    currentQuestion++;
+                    showQuestion(currentQuestion);
+                } else {
+                    // Quiz completed - show results
+                    quizContainer.classList.add('hidden');
+                    showResults();
+                }
+            } else {
+                alert("Por favor responde la pregunta antes de continuar.");
+            }
+        });
+        
+        // Show question
+        function showQuestion(index) {
+            const question = questions[index];
+            let html = '';
+            
+            // Update progress
+            const progress = ((index + 1) / questions.length) * 100;
+            progressText.textContent = `Pregunta ${index + 1} de ${questions.length}`;
+            progressPercent.textContent = `${Math.round(progress)}% completado`;
+            progressBar.style.width = `${progress}%`;
+            
+            // Handle name input separately
+            if (question.type === 'name') {
+                html = `
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">${question.question}</h3>
+                    <input type="text" id="answerInput" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="${question.placeholder}" value="${answers[question.id] || ''}">
+                `;
+            } 
+            // Single select question
+            else if (question.type === 'single') {
+                html = `<h3 class="text-2xl font-bold text-gray-800 mb-6">${question.question}</h3><div class="space-y-3">`;
+                
+                question.options.forEach((option, i) => {
+                    const isChecked = answers[question.id] === option.value ? 'checked' : '';
+                    html += `
+                        <div class="flex items-center">
+                            <input type="radio" id="option-${i}" name="answer" value="${option.value}" ${isChecked} 
+                                class="h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-300 rounded-full">
+                            <label for="option-${i}" class="ml-3 text-gray-700">${option.text}</label>
+                        </div>
+                    `;
+                });
+                
+                html += `</div>`;
+            }
+            // Multi select question
+            else if (question.type === 'multi') {
+                html = `<h3 class="text-2xl font-bold text-gray-800 mb-6">${question.question}</h3><div class="space-y-3">`;
+                
+                question.options.forEach((option, i) => {
+                    const isChecked = answers[question.id] && answers[question.id].includes(option.value) ? 'checked' : '';
+                    html += `
+                        <div class="flex items-center">
+                            <input type="checkbox" id="option-${i}" name="answer" value="${option.value}" ${isChecked} 
+                                class="h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                            <label for="option-${i}" class="ml-3 text-gray-700">${option.text}</label>
+                        </div>
+                    `;
+                });
+                
+                html += `</div>`;
+            }
+            // Range question
+            else if (question.type === 'range') {
+                html = `
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">${question.question}</h3>
+                    <div class="px-2">
+                        <input type="range" id="answerInput" min="${question.min}" max="${question.max}" value="${answers[question.id] || Math.round((question.max - question.min)/2 + question.min)}" 
+                            class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                        <div class="flex justify-between text-sm text-gray-600 mt-2">
+                            <span>${question.labels[0]}</span>
+                            <span>${question.labels[1]}</span>
+                            ${question.labels[2] ? `<span>${question.labels[2]}</span>` : ''}
+                        </div>
+                    </div>
+                `;
+            }
+            // Text input question
+            else if (question.type === 'text') {
+                html = `
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">${question.question}</h3>
+                    <textarea id="answerInput" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                        placeholder="${question.placeholder}" rows="3">${answers[question.id] || ''}</textarea>
+                `;
+            }
+            
+            quizContent.innerHTML = html;
+            
+            // Show/hide prev button
+            if (index === 0) {
+                prevBtn.classList.add('hidden');
+            } else {
+                prevBtn.classList.remove('hidden');
+            }
+            
+            // Update next button text on last question
+            if (index === questions.length - 1) {
+                nextBtn.textContent = 'Finalizar Evaluación';
+            } else {
+                nextBtn.textContent = 'Siguiente';
+            }
+        }
+        
+        // Validate current question has an answer before proceeding
+        function validateCurrentQuestion() {
+            const currentQ = questions[currentQuestion];
+            
+            if (currentQ.type === 'name') {
+                const input = document.getElementById('answerInput');
+                return input.value.trim() !== '';
+            } else if (currentQ.type === 'single') {
+                return document.querySelector('input[name="answer"]:checked') !== null;
+            } else if (currentQ.type === 'multi') {
+                return document.querySelector('input[name="answer"]:checked') !== null;
+            }
+            
+            // For range and text types, there's always a value
+            return true;
+        }
+        
+        // Save answer to answers object
+        function saveAnswer() {
+            const currentQ = questions[currentQuestion];
+            
+            if (currentQ.type === 'name') {
+                const input = document.getElementById('answerInput');
+                userNameValue = input.value.trim();
+                answers[currentQ.id] = userNameValue;
+            } 
+            else if (currentQ.type === 'single') {
+                const selected = document.querySelector('input[name="answer"]:checked');
+                if (selected) {
+                    answers[currentQ.id] = selected.value;
+                }
+            }
+            else if (currentQ.type === 'multi') {
+                const selected = document.querySelectorAll('input[name="answer"]:checked');
+                answers[currentQ.id] = Array.from(selected).map(el => el.value);
+            }
+            else if (currentQ.type === 'range') {
+                const slider = document.getElementById('answerInput');
+                answers[currentQ.id] = parseInt(slider.value);
+            }
+            else if (currentQ.type === 'text') {
+                const textarea = document.getElementById('answerInput');
+                answers[currentQ.id] = textarea.value.trim();
+            }
+        }
+        
+        // Show results after quiz completion
+        function showResults() {
+            resultsContainer.classList.remove('hidden');
+            resultsDetails.classList.add('hidden');
+            analysisAnimation.classList.remove('hidden');
+            
+            // Set user name if provided
+            if (userNameValue) {
+                userName.textContent = userNameValue;
+            } else {
+                userName.textContent = "usuario";
+            }
+            
+            // Simulate analysis animation
+            let width = 0;
+            const interval = setInterval(() => {
+                width += 5;
+                analysisBar.style.width = `${width}%`;
+                
+                if (width >= 100) {
+                    clearInterval(interval);
+                    
+                    setTimeout(() => {
+                        analysisText.textContent = "¡Análisis completado!";
+                        
+                        setTimeout(() => {
+                            analysisAnimation.classList.add('hidden');
+                            resultsDetails.classList.remove('hidden');
+                        }, 1000);
+                    }, 500);
+                } else if (width < 30) {
+                    analysisText.textContent = "Analizando tu perfil profesional...";
+                } else if (width < 60) {
+                    analysisText.textContent = "Evaluando oportunidades de IA...";
+                } else if (width < 90) {
+                    analysisText.textContent = "Buscando las mejores soluciones...";
+                } else {
+                    analysisText.textContent = "Preparando tus resultados...";
+                }
+            }, 100);
+        }
+        
+        // Reset quiz to initial state
+        function resetQuiz() {
+            currentQuestion = 0;
+            answers = {};
+            showQuestion(currentQuestion);
+        }
+    </script>
+</body>
+</html>
